@@ -24,8 +24,14 @@ def main():
     shots = pygame.sprite.Group()
     Player.containers = (updatable, drawable)
     Asteroid.containers = (asteroids, updatable, drawable)
-    AsteroidField.containers = (updatable)
+    AsteroidField.containers = (updatable,)
     Shot.containers = (shots, updatable, drawable)
+
+    #print("Initial setup:")
+    #print(f"Asteroids group: {len(asteroids)}")
+    #print(f"Shots group: {len(shots)}")
+    #print(f"Updatable group: {len(updatable)}")
+    #print(f"Drawable group: {len(drawable)}")
 
 
     entity = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2) #instance of class Player, it is an object
@@ -42,9 +48,6 @@ def main():
 
         for obj in updatable: #for any object in updatatable group
             obj.update(dt) # update
-        for obj in drawable:
-            obj.draw(screen)
-
 
 
         for asteroid in asteroids: # for any class instance of asteroid in group asteroids
@@ -52,8 +55,23 @@ def main():
             if asteroid.collides_with(entity): 
                 print("Game over!")
                 sys.exit() # exit game
+                
+
+        for asteroid in asteroids:
+            for shot in shots:
+                if asteroid.collides_with(shot):
+                    #print("Before kill:")
+                    #print(f"Asteroid groups: {asteroid.groups()}")
+                    #print(f"Shot groups: {shot.groups()}")
+                    #print(f"Group sizes - Asteroids: {len(asteroids)} Shots: {len(shots)}")
+                    asteroid.split()
+                    shot.kill()
+                    #print("After kill:")
 
 
+        for obj in drawable:
+            obj.draw(screen)
+                
         pygame.display.flip()
         dt = clock.tick(60) / 1000 #fps control
 

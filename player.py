@@ -1,6 +1,6 @@
 import pygame
 from circleshape import CircleShape
-from constants import PLAYER_RADIUS, PLAYER_TURN_SPEED, PLAYER_SPEED, PLAYER_SHOOT_SPEED
+from constants import PLAYER_RADIUS, PLAYER_TURN_SPEED, PLAYER_SPEED, PLAYER_SHOOT_SPEED, PLAYER_SHOOT_COOLDOWN
 from shot import Shot
 
 
@@ -20,7 +20,10 @@ class Player(CircleShape):
     def rotate(self, dt): #rotation speed
        self.rotation +=  PLAYER_TURN_SPEED * dt 
 
+    shoot_timer = 0
+
     def update(self, dt):
+        self.shoot_timer -= dt
         keys = pygame.key.get_pressed() #keys variable = key getting pressed on keyboard
 
         if keys[pygame.K_w]: #if (input) key pressed
@@ -39,10 +42,17 @@ class Player(CircleShape):
         # .rotate(self.rotation) determines the (x, y) axis relative to self (a.k.a the player)
         self.position += forward * PLAYER_SPEED * dt # updated self.position to the new position
 
+    
+
     def shoot(self):
+        if self.shoot_timer > 0:
+            return 
+        self.shoot_timer = PLAYER_SHOOT_COOLDOWN
+
         velocity = pygame.Vector2(0, 1).rotate(self.rotation) * PLAYER_SHOOT_SPEED # move (0, 1) from players position
         my_shot = Shot(self.position.x, self.position.y) # new Shot class instance (my_shot = object)
         # starts the shot at the players location (self = player object position)
         my_shot.velocity = velocity # adds velocity to my_shot class instance
         # sets the new object(my_shot of Class Shot) velocity(position) equal to the velocity(position)
         # this maintains the velocity each frame till it goes offscreen
+            

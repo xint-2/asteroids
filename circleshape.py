@@ -8,8 +8,8 @@ class CircleShape(pygame.sprite.Sprite): #CircleShape class is a sprite
             super().__init__(self.containers)
         else:
             super().__init__()
-
-        pygame.sprite.Sprite.__init__(self) #initialize CircleShape as a sprite
+        
+         #initialize CircleShape as a sprite
 
         self.position = pygame.Vector2(x, y) # position of self is a vector on cartesian plane
         self.velocity = pygame.Vector2(0, 0) # velocity is none for now
